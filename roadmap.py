@@ -17,7 +17,7 @@ def get_roadmap_for_aspiration(aspiration):
     - Suggested timeline for each step
     - Tips for staying motivated and overcoming common challenges
 
-    Format the response in a clear, structured.
+    Format the response in a clear, structured way.
     """
 
     try:
