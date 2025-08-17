@@ -15,23 +15,26 @@ jobs:
 
       # Python Syntax Check (only if .py files exist)
       - name: Validate Python Syntax
+        if: ${{ hashFiles('**/*.py') != '' }}
         run: |
-          if ls **/*.py 1> /dev/null 2>&1; then
-            echo "Python files found, running syntax check..."
-            python -m compileall -q .
+          echo "🔍 Checking Python files..."
+          python -m compileall .
+          if [ $? -eq 0 ]; then
+            echo "✅ All Python files compiled successfully."
           else
-            echo "No Python files found, skipping."
+            echo "❌ Python syntax errors found!"
+            exit 1
           fi
 
-      # .NET Syntax Check (only if .csproj/.sln exist)
+      # Setup .NET (only if .csproj or .sln exists)
       - name: Setup .NET
-        if: ${{ hashFiles('**/*.csproj', '**/*.sln') != '' }}
+        if: ${{ hashFiles('**/*.csproj') != '' || hashFiles('**/*.sln') != '' }}
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '7.0.x'
 
       - name: Validate .NET Build
-        if: ${{ hashFiles('**/*.csproj', '**/*.sln') != '' }}
+        if: ${{ hashFiles('**/*.csproj') != '' || hashFiles('**/*.sln') != '' }}
         run: |
-          echo "Running .NET build..."
+          echo "🔍 Building .NET project..."
           dotnet build --no-restore
