@@ -1,0 +1,28 @@
+name: Syntax Validation
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  syntax-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Python Syntax Check
+      - name: Validate Python Syntax
+        run: |
+          python -m compileall -q .
+
+      # .NET Syntax Check (build check)
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '7.0.x'
+
+      - name: Validate .NET Build
+        run: dotnet build --no-restore
