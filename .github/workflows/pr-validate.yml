@@ -13,16 +13,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Python Syntax Check
+      # Python Syntax Check (only if .py files exist)
       - name: Validate Python Syntax
+        if: ${{ contains(join(fromJSON('["' + join(github.event.pull_request.head.repo.contents_url, '') + '"]')), '.py') }}
         run: |
-          python -m compileall -q .
+          echo "Checking for Python syntax..."
+          python -m compileall -q . || { echo "Python syntax errors found!"; exit 1; }
 
-      # .NET Syntax Check (build check)
+      # .NET Syntax Check (only if .csproj exists)
       - name: Setup .NET
+        if: ${{ hashFiles('**/*.csproj') != '' }}
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '7.0.x'
 
       - name: Validate .NET Build
-        run: dotnet build --no-restore
+        if: ${{ hashFiles('**/*.csproj') != '' }}
+        run: |
+          echo "Checking for .NET syntax/build errors..."
+          dotnet build --no-restore
