@@ -24,3 +24,12 @@ For AI requests → .NET calls Python FastAPI (Gemini wrapper).
 
 Responses returned to frontend.
 
+MVP Deployment
+
+Backend (.NET + Python services): Host on Google Cloud Run (auto-scaling, low cost).
+
+Database: Firestore (serverless, no need to manage infra).
+
+Authentication/Storage: Firebase (integrates smoothly with Firestore).
+
+Secrets: Google Secret Manager.
